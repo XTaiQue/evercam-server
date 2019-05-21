@@ -10,7 +10,6 @@ defmodule EvercamMedia.HTTPClient do
   def get(:digest_auth, response, url, username, password) do
     digest_token = DigestAuth.get_digest_token(response, url, username, password)
     hackney = [pool: :snapshot_pool]
-    IO.inspect digest_token
     HTTPoison.get url, ["Authorization": "Digest #{digest_token}"], hackney: hackney
   end
 
@@ -45,7 +44,7 @@ defmodule EvercamMedia.HTTPClient do
         # IO.inspect
         # File.write("#{Application.get_env(:evercam_media, :storage_dir)}/#{name}.jpg", chunk)
         EvercamMedia.Snapshot.Storage.save("evercam-office", timestamp, chunk, "Evercam Proxy")
-        :timer.sleep(5000)
+        # :timer.sleep(5000)
         collect_response(id, par, data)
       %HTTPoison.AsyncEnd{id: _id} ->
         Logger.debug "Stream complete"
